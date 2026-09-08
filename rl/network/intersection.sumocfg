@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <input>
+        <net-file value="intersection.net.xml"/>
+        <route-files value="intersection.rou.xml"/>
+    </input>
+    <time>
+        <begin value="0"/>
+        <end value="3000"/>
+    </time>
+    <processing>
+        <time-to-teleport value="300"/>
+    </processing>
+</configuration>

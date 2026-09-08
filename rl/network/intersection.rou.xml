@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/routes_file.xsd">
+
+    <vType id="car" accel="2.6" decel="4.5" sigma="0.5" length="5" minGap="2.5" maxSpeed="16.6"/>
+
+    <route id="north_south" edges="N2C C2S"/>
+    <route id="south_north" edges="S2C C2N"/>
+    <route id="east_west"   edges="E2C C2W"/>
+    <route id="west_east"   edges="W2C C2E"/>
+
+    <!-- North-South: the heavy direction -->
+    <flow id="ns" type="car" route="north_south" begin="0" end="3000"
+          vehsPerHour="600" departSpeed="max" departLane="best"/>
+    <flow id="sn" type="car" route="south_north" begin="0" end="3000"
+          vehsPerHour="600" departSpeed="max" departLane="best"/>
+
+    <!-- East-West: the light direction -->
+    <flow id="ew" type="car" route="east_west" begin="0" end="3000"
+          vehsPerHour="250" departSpeed="max" departLane="best"/>
+    <flow id="we" type="car" route="west_east" begin="0" end="3000"
+          vehsPerHour="250" departSpeed="max" departLane="best"/>
+
+</routes>

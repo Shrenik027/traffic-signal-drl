@@ -1,0 +1,6 @@
+sumo-rl
+stable-baselines3[extra]
+gymnasium
+numpy
+pandas
+tensorboard

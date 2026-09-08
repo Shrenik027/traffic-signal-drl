@@ -1,0 +1,12 @@
+venv/
+__pycache__/
+*.pyc
+/rl/models/
+/rl/results/
+node_modules/
+.next/
+*.out.xml
+.DS_Store
+/rl/tensorboard/
+.env.local
+rl/train_v1.log

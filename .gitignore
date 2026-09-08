@@ -10,3 +10,7 @@ node_modules/
 /rl/tensorboard/
 .env.local
 rl/train_v1.log
+/rl/tensorboard/
+.env.local
+rl/*.log
+paper/*.aux

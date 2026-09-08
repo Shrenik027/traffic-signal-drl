@@ -54,39 +54,79 @@ cd frontend
 npm install
 ```
 
+## Headline results
+
+**Single intersection** — DQN vs fixed timer, 3 matched seeds:
+12.08 s → **4.02 s** average waiting time (**66.7% lower**).
+
+**2×2 grid, heterogeneous Indian traffic** — one shared policy over 4 junctions:
+
+| Scenario | Fixed timer | RL agent | Reduction |
+|---|---|---|---|
+| Light | 18.69 s | 6.51 s | 65.2% |
+| Normal | 20.61 s | 6.79 s | 67.1% |
+| Heavy | 24.65 s | 6.63 s | 73.1% |
+| Emergency | 20.76 s | 6.68 s | 67.8% |
+
+**Emergency-vehicle priority** — ambulance clearance 80.67 s → **62.83 s**
+(22.1% faster), ambulance waiting 16.08 s → **2.67 s** (83.4% lower), for a
+6.3% cost to ordinary traffic. An agent trained *without* the emergency
+reward term shows no ambulance improvement (83.83 s) — the ablation that
+proves the effect comes from the reward design.
+
 ## Running everything, in order
 
 ```bash
-# 1. Generate the SUMO network + routes (only needs to be run once, or after changing demand)
 cd rl && source venv/bin/activate
-python network/build_network.py
 
-# 2. Run the fixed-timer baseline
-python baseline.py
+# ---------- MINI PROJECT: single intersection ----------
+python network/build_network.py          # build the junction
+python network/build_routes.py           # build the demand
+python baseline.py                       # fixed-timer baseline
+python train.py --timesteps 60000        # train DQN  (~9 min, CPU)
+python evaluate.py --model models/dqn_traffic_v1.zip --seeds 42 123 2024
 
-# 3. Train the DQN agent (watch the curve with TensorBoard)
-python train.py
-tensorboard --logdir tensorboard/          # in a second terminal
+# ---------- MAJOR PROJECT: 2x2 grid ----------
+python network/build_grid.py             # 4 signalised junctions
+python network/build_grid_routes.py --all  # all 4 demand scenarios
+python train_grid.py --mode normal    --timesteps 100000   # ~10 min
+python train_grid.py --mode emergency --timesteps 100000   # ~10 min
+python evaluate_grid.py --seeds 42 123 2024                # ~15 min
 
-# 4. Evaluate agent vs baseline on matched seeds -> rl/results/metrics.json
-python evaluate.py
+tensorboard --logdir tensorboard/        # optional, in a second terminal
+```
 
-# 5. Start the backend (serves metrics.json as JSON)
-cd ../backend && source venv/bin/activate
-uvicorn main:app --reload --port 8000
+Then, in two more terminals:
 
-# 6. Start the dashboard
-cd ../frontend
-npm run dev
+```bash
+cd backend && source venv/bin/activate && uvicorn main:app --reload --port 8000
+cd frontend && npm run dev
 # open http://localhost:3000
+```
+
+To watch it happen visually, any scenario can be opened in the SUMO GUI:
+
+```bash
+sumo-gui -c rl/network/grid_emergency.sumocfg
 ```
 
 ## Repo structure
 
 ```
-/rl          SUMO network, baseline, training, evaluation, results
-/backend     FastAPI app serving /api/results
-/frontend    Next.js dashboard (fixed timer vs agent)
-CLAUDE.md    project memory for Claude Code
-DEFENSE-GUIDE.md   walkthrough + viva prep
+/rl
+  network/build_network.py       single 4-way intersection
+  network/build_routes.py        asymmetric demand for it
+  network/build_grid.py          2x2 grid of 4 signalised junctions
+  network/build_grid_routes.py   heterogeneous Indian traffic, 4 scenarios
+  baseline.py                    fixed-timer baseline (single intersection)
+  train.py                       DQN, single intersection
+  emergency.py                   emergency observation + reward
+  train_grid.py                  shared-policy multi-agent DQN
+  evaluate.py                    single-intersection comparison
+  evaluate_grid.py               full multi-scenario study
+/backend     FastAPI: /api/results and /api/results/grid
+/frontend    Next.js dashboard (both studies, tabbed)
+/paper       IEEE-style paper draft, written from the real results
+CLAUDE.md            project memory for Claude Code
+DEFENSE-GUIDE.md     full walkthrough + viva prep — read this
 ```

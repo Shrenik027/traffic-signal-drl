@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<edges>
+    <edge id="N1A1" from="N1" to="A1" numLanes="2" speed="13.89"/>
+    <edge id="A1N1" from="A1" to="N1" numLanes="2" speed="13.89"/>
+    <edge id="N2A2" from="N2" to="A2" numLanes="2" speed="13.89"/>
+    <edge id="A2N2" from="A2" to="N2" numLanes="2" speed="13.89"/>
+    <edge id="S1B1" from="S1" to="B1" numLanes="2" speed="13.89"/>
+    <edge id="B1S1" from="B1" to="S1" numLanes="2" speed="13.89"/>
+    <edge id="S2B2" from="S2" to="B2" numLanes="2" speed="13.89"/>
+    <edge id="B2S2" from="B2" to="S2" numLanes="2" speed="13.89"/>
+    <edge id="W1A1" from="W1" to="A1" numLanes="2" speed="13.89"/>
+    <edge id="A1W1" from="A1" to="W1" numLanes="2" speed="13.89"/>
+    <edge id="W2B1" from="W2" to="B1" numLanes="2" speed="13.89"/>
+    <edge id="B1W2" from="B1" to="W2" numLanes="2" speed="13.89"/>
+    <edge id="E1A2" from="E1" to="A2" numLanes="2" speed="13.89"/>
+    <edge id="A2E1" from="A2" to="E1" numLanes="2" speed="13.89"/>
+    <edge id="E2B2" from="E2" to="B2" numLanes="2" speed="13.89"/>
+    <edge id="B2E2" from="B2" to="E2" numLanes="2" speed="13.89"/>
+    <edge id="A1A2" from="A1" to="A2" numLanes="2" speed="13.89"/>
+    <edge id="A2A1" from="A2" to="A1" numLanes="2" speed="13.89"/>
+    <edge id="B1B2" from="B1" to="B2" numLanes="2" speed="13.89"/>
+    <edge id="B2B1" from="B2" to="B1" numLanes="2" speed="13.89"/>
+    <edge id="A1B1" from="A1" to="B1" numLanes="2" speed="13.89"/>
+    <edge id="B1A1" from="B1" to="A1" numLanes="2" speed="13.89"/>
+    <edge id="A2B2" from="A2" to="B2" numLanes="2" speed="13.89"/>
+    <edge id="B2A2" from="B2" to="A2" numLanes="2" speed="13.89"/>
+</edges>

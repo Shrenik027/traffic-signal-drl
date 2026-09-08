@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nodes>
+    <!-- the four controlled junctions -->
+    <node id="A1" x="0"        y="300"  type="traffic_light"/>
+    <node id="A2" x="300" y="300"  type="traffic_light"/>
+    <node id="B1" x="0"        y="0"          type="traffic_light"/>
+    <node id="B2" x="300" y="0"          type="traffic_light"/>
+
+    <!-- fringe: sources and sinks -->
+    <node id="N1" x="0"          y="600"  type="priority"/>
+    <node id="N2" x="300"   y="600"  type="priority"/>
+    <node id="S1" x="0"          y="-300"     type="priority"/>
+    <node id="S2" x="300"   y="-300"     type="priority"/>
+    <node id="W1" x="-300"  y="300"      type="priority"/>
+    <node id="W2" x="-300"  y="0"              type="priority"/>
+    <node id="E1" x="600" y="300"    type="priority"/>
+    <node id="E2" x="600" y="0"            type="priority"/>
+</nodes>

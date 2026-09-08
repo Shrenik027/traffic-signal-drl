@@ -45,11 +45,27 @@ identical random seeds. The dashboard shows this comparison.
 - Small, runnable steps. Each script runnable from the terminal after it's written.
 - Log metrics to plain JSON so frontend and report both use them.
 
-## Actual results achieved (update this whenever you re-run evaluate.py)
-- Baseline (fixed timer) avg waiting time: 12.08s (std 0.02, seeds 42/123/2024)
-- Trained agent (DQN, 60k timesteps) avg waiting time: 4.02s (std 0.08)
-- Improvement: 66.7% lower average waiting time, consistent across 3 seeds
-- Fairness check: heavy direction (N-S) waits ~3.3s, light direction (E-W)
-  waits ~6.0s under the agent -- both far below the timer's flat 12s, and
-  neither direction is starved (see DEFENSE-GUIDE.md "reward hacking check")
+## Status: BOTH milestones built
+
+### Mini project (single intersection) -- done
+- Fixed timer 12.08s +- 0.02 -> DQN agent 4.02s +- 0.08 = 66.7% better
+  (seeds 42/123/2024). Fairness check: N-S 3.3s, E-W 6.0s, neither starved.
 - Full numbers: rl/results/metrics.json
+
+### Major project (2x2 grid, heterogeneous traffic, emergency priority) -- done
+- Shared-policy DQN over 4 junctions, Indian mixed fleet (55% two-wheeler /
+  25% car / 13% auto / 7% bus) with SUMO sublane model for lateral filtering.
+- Waiting time vs fixed timing: light 65.2%, normal 67.1%, heavy 73.1%,
+  emergency 67.8% lower. Throughput preserved or slightly up in all cases.
+- Emergency-aware agent: ambulance clearance 80.67s -> 62.83s (22.1% faster),
+  ambulance waiting 16.08s -> 2.67s (83.4% lower), costing ordinary traffic
+  6.3% more waiting (6.68s -> 7.10s).
+- ABLATION: base agent without the emergency reward term gives NO ambulance
+  improvement (83.83s). The priority behaviour comes from the reward term.
+- Full numbers: rl/results/metrics_grid.json | Paper draft: paper/PAPER.md
+
+## Extended scope now built (was "for context, not to build yet")
+Multi-junction grid, heterogeneous Indian traffic and emergency-vehicle
+priority are IMPLEMENTED. Remaining from the original roadmap: importing a
+real local junction from OpenStreetMap, non-stationary demand profiles, and
+calibration against local field data.

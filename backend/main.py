@@ -27,23 +27,39 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-METRICS_PATH = os.path.join(
-    os.path.dirname(os.path.abspath(__file__)), "..", "rl", "results", "metrics.json"
+RESULTS_DIR = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)), "..", "rl", "results"
 )
+METRICS_PATH = os.path.join(RESULTS_DIR, "metrics.json")
+GRID_METRICS_PATH = os.path.join(RESULTS_DIR, "metrics_grid.json")
+
+
+def _read(path: str, produced_by: str):
+    if not os.path.exists(path):
+        raise HTTPException(
+            status_code=404,
+            detail=f"{os.path.basename(path)} not found -- run '{produced_by}' in /rl first.",
+        )
+    with open(path) as f:
+        return json.load(f)
 
 
 @app.get("/api/results")
 def get_results():
-    """Returns the baseline-vs-agent comparison written by rl/evaluate.py."""
-    if not os.path.exists(METRICS_PATH):
-        raise HTTPException(
-            status_code=404,
-            detail="metrics.json not found -- run 'python evaluate.py' in /rl first.",
-        )
-    with open(METRICS_PATH) as f:
-        return json.load(f)
+    """Mini-project: single-intersection baseline-vs-agent, from rl/evaluate.py."""
+    return _read(METRICS_PATH, "python evaluate.py")
+
+
+@app.get("/api/results/grid")
+def get_grid_results():
+    """Major project: the full 2x2 grid study, from rl/evaluate_grid.py.
+
+    Covers all demand scenarios, the heterogeneous-traffic breakdown and the
+    emergency-vehicle comparison.
+    """
+    return _read(GRID_METRICS_PATH, "python evaluate_grid.py")
 
 
 @app.get("/")
 def root():
-    return {"status": "ok", "see": "/api/results"}
+    return {"status": "ok", "see": ["/api/results", "/api/results/grid"]}

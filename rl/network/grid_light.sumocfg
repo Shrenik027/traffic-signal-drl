@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <input>
+        <net-file value="grid.net.xml"/>
+        <route-files value="grid_light.rou.xml"/>
+    </input>
+    <time>
+        <begin value="0"/>
+        <end value="3000"/>
+    </time>
+    <processing>
+        <time-to-teleport value="300"/>
+        <!-- sublane model: lets narrow vehicles (two-wheelers, autos) use
+             part of a lane and filter past wider ones. This is what makes
+             the heterogeneous mix behave like Indian traffic rather than
+             like a queue of differently-sized cars. -->
+        <lateral-resolution value="0.8"/>
+        <collision.action value="warn"/>
+    </processing>
+</configuration>

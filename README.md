@@ -104,7 +104,39 @@ cd frontend && npm run dev
 # open http://localhost:3000
 ```
 
-To watch it happen visually, any scenario can be opened in the SUMO GUI:
+## Live demo (`demo.py`) — use this for the presentation
+
+You do **not** need to retrain anything to demo. The trained models are in
+`rl/models/` and the results in `rl/results/`. `demo.py` loads a trained
+model and plays one episode on screen in the SUMO GUI.
+
+```bash
+cd rl && source venv/bin/activate
+
+# 1. one junction, ordinary car traffic, ordinary fixed timer
+python demo.py --stage mini --controller fixed
+
+# 2. same junction, same traffic, the trained agent driving the light
+python demo.py --stage mini --controller agent
+
+# 3. four junctions, now with heterogeneous Indian traffic, fixed timers
+python demo.py --stage grid --scenario normal --controller fixed
+
+# 4. the same corridor under the shared RL policy
+python demo.py --stage grid --scenario normal --controller agent
+
+# 5. the finale: camera follows each ambulance, corridor opens ahead of it
+python demo.py --stage grid --scenario emergency --controller fixed --follow
+python demo.py --stage grid --scenario emergency --controller agent_emergency --follow
+```
+
+Flags: `--delay 120` slows playback, `--begin 550` skips ahead (ambulances
+enter at t = 600, 1200, 1800, 2400 s), `--no-gui` runs headless.
+
+Every run ends by printing average waiting time per vehicle — the same
+metric the paper and dashboard report, so no two numbers ever disagree.
+
+Any scenario can also be opened directly in the SUMO GUI on fixed timers:
 
 ```bash
 sumo-gui -c rl/network/grid_emergency.sumocfg

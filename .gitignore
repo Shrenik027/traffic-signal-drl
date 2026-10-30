@@ -14,3 +14,28 @@ rl/train_v1.log
 .env.local
 rl/*.log
 paper/*.aux
+
+@"
+# Python
+venv/
+.venv/
+__pycache__/
+*.pyc
+
+# Node / Next.js
+node_modules/
+.next/
+
+# Secrets
+.env
+.env.*
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+
+# Large generated files (optional, remove a line if you want that file shared)
+*.tripinfo.xml
+tensorboard/
+"@ | Set-Content .gitignore

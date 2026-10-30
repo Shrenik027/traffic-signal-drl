@@ -42,7 +42,9 @@ Usage:
 import argparse
 import os
 
-os.environ.setdefault("SUMO_HOME", "/usr/share/sumo")
+from sumo_home import ensure_sumo_home  # noqa: E402
+
+ensure_sumo_home()  # locate SUMO on this machine before sumo_rl is imported
 
 import sumo_rl  # noqa: E402
 from stable_baselines3 import DQN  # noqa: E402

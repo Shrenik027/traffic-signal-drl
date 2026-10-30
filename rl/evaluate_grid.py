@@ -39,7 +39,9 @@ import xml.etree.ElementTree as ET
 from collections import defaultdict
 from datetime import datetime, timezone
 
-os.environ.setdefault("SUMO_HOME", "/usr/share/sumo")
+from sumo_home import ensure_sumo_home  # noqa: E402
+
+ensure_sumo_home()  # locate SUMO on this machine before sumo_rl is imported
 
 import numpy as np  # noqa: E402
 import sumo_rl  # noqa: E402

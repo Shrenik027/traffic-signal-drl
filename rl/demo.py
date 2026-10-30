@@ -38,7 +38,9 @@ Useful flags:
 import argparse
 import os
 
-os.environ.setdefault("SUMO_HOME", "/usr/share/sumo")
+from sumo_home import ensure_sumo_home  # noqa: E402
+
+ensure_sumo_home()  # locate SUMO on this machine before sumo_rl is imported
 
 import sumo_rl  # noqa: E402
 from stable_baselines3 import DQN  # noqa: E402
@@ -55,10 +57,31 @@ EPISODE_SECONDS = 3000
 EMERGENCY_VTYPE = "emergency"
 
 
+def sumo_safe_path(path: str):
+    """A path SUMO can receive on its command line, or None.
+
+    sumo-rl passes extra arguments through as one space-separated string, so
+    a path containing a space would be split into two broken arguments. A
+    relative path usually avoids this (e.g. 'results\\demo.xml'); if neither
+    the relative nor the absolute form is space-free we give up on the
+    tripinfo file rather than crash a live demo.
+    """
+    try:
+        relative = os.path.relpath(path, os.getcwd())
+        if " " not in relative and not relative.startswith(".."):
+            return relative
+    except ValueError:  # different drive on Windows
+        pass
+    return path if " " not in path else None
+
+
 def build_env(args, tripinfo_path):
     """Construct the environment for the requested stage/scenario/controller."""
     gui = not args.no_gui
-    extra = f"--no-step-log --tripinfo-output {tripinfo_path}"
+    extra = "--no-step-log"
+    safe = sumo_safe_path(tripinfo_path) if tripinfo_path else None
+    if safe:
+        extra += f" --tripinfo-output {safe}"
 
     if args.stage == "mini":
         net_file = os.path.join(NET, "intersection.net.xml")
@@ -75,9 +98,14 @@ def build_env(args, tripinfo_path):
         )
 
     if gui:
-        # --start plays immediately instead of waiting for the play button;
-        # --delay slows it to human-watchable speed.
-        extra += f" --start --delay {args.delay}"
+        # --delay slows playback to human-watchable speed (milliseconds/step).
+        #
+        # Do NOT add --start here. sumo-rl appends "--start --quit-on-end"
+        # itself for GUI runs, and SUMO refuses to launch if the same option
+        # is supplied twice ("A value for the option 'start' was already
+        # set"), which shows up confusingly as TraCI failing to connect on a
+        # long list of retried ports.
+        extra += f" --delay {args.delay}"
 
     kwargs = dict(
         net_file=net_file,
@@ -190,6 +218,9 @@ def main():
     # smaller number; having two different "waiting times" floating around
     # in a viva is how you get caught out.)
     print(f"\n--- {label} ---")
+    if not os.path.exists(tripinfo_path):
+        print("(per-vehicle summary unavailable -- the folder path contains a space;\n"
+              " move the project somewhere like C:\\traffic-rl to get the numbers)")
     if os.path.exists(tripinfo_path):
         summary = summarize_tripinfo(tripinfo_path)
         print(f"average waiting time per vehicle: {summary['avg_waiting_time']:.2f} s")

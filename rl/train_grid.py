@@ -41,7 +41,9 @@ Usage:
 import argparse
 import os
 
-os.environ.setdefault("SUMO_HOME", "/usr/share/sumo")
+from sumo_home import ensure_sumo_home  # noqa: E402
+
+ensure_sumo_home()  # locate SUMO on this machine before sumo_rl is imported
 
 # --- compatibility shims -----------------------------------------------------
 # sumo-rl was written against an older PettingZoo API. Two names moved in
